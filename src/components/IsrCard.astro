@@ -1,0 +1,104 @@
+---
+interface Props {
+  title: string;
+  badge: string;
+  endpoint: string;
+  header: string;
+}
+
+const { title, badge, endpoint, header } = Astro.props;
+---
+
+<div class="card gap-5 py-5" data-card data-endpoint={endpoint}>
+  <header class="gap-1 px-5">
+    <h2 class="text-base font-semibold">{title}</h2>
+    <p class="text-muted-foreground font-mono text-xs">{endpoint}</p>
+    <div class="card-action">
+      <span class="badge" data-variant="secondary">{badge}</span>
+    </div>
+  </header>
+
+  <section class="flex grow flex-col gap-3 px-5">
+    <code class="bg-muted block rounded-md px-2 py-1.5 text-xs">{header}</code>
+    <div class="flex items-end justify-between gap-3 border-t pt-4">
+      <div class="flex flex-col gap-0.5">
+        <span class="text-muted-foreground text-[11px] font-medium uppercase tracking-wide">
+          Cache age
+        </span>
+        <span class="text-3xl font-semibold tabular-nums" data-age>&mdash;</span>
+        <span class="text-muted-foreground text-xs" data-generated>Not fetched yet</span>
+      </div>
+      <span class="badge hidden" data-state></span>
+    </div>
+  </section>
+
+  <footer class="flex flex-wrap gap-2 px-5">
+    <button class="btn" data-size="sm" type="button" data-fetch>Fetch</button>
+    <slot name="actions" />
+  </footer>
+</div>
+
+<script>
+  const formatAge = (ms: number) => {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    return `${Math.floor(total / 60)}m ${String(total % 60).padStart(2, '0')}s`;
+  };
+
+  const clock = (date: Date) => date.toLocaleTimeString([], { hour12: false });
+
+  const toast = (title: string, category: 'success' | 'error') =>
+    (document.getElementById('toaster') as any)?.toast({ title, category });
+
+  async function fetchDate(card: HTMLElement) {
+    // `no-store` keeps the browser cache out of it, so what we see is the CDN's.
+    const response = await fetch(card.dataset.endpoint!, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    // Age is a snapshot taken at fetch time — it does not tick afterwards.
+    const { generatedAtEpochMs } = await response.json();
+    const age = Date.now() - generatedAtEpochMs;
+
+    card.querySelector('[data-age]')!.textContent = formatAge(age);
+    card.querySelector('[data-generated]')!.textContent =
+      `Rendered at ${clock(new Date(generatedAtEpochMs))}`;
+
+    // A body older than a couple of seconds cannot have been rendered for this
+    // request, so it came from the CDN.
+    const cached = age > 2000;
+    const state = card.querySelector<HTMLElement>('[data-state]')!;
+    state.textContent = cached ? 'Cached' : 'Fresh';
+    state.dataset.variant = cached ? 'secondary' : 'primary';
+    state.classList.remove('hidden');
+  }
+
+  async function invalidate(type: string, reference?: string) {
+    const response = await fetch('/v1/isr/invalidate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, reference }),
+    });
+    const body = await response.json();
+    if (!response.ok || !body.success) throw new Error(body.message ?? `HTTP ${response.status}`);
+
+    // Only a type=all purge comes through without a reference.
+    toast(`Purged ${reference ?? 'everything'} — fetch again to see it`, 'success');
+  }
+
+  document.addEventListener('click', async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      '[data-fetch], [data-invalidate]',
+    );
+    if (!button) return;
+
+    const { invalidate: type, reference } = button.dataset;
+    button.disabled = true;
+
+    try {
+      await (type ? invalidate(type, reference) : fetchDate(button.closest('[data-card]')!));
+    } catch (error) {
+      toast(error instanceof Error ? error.message : String(error), 'error');
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>

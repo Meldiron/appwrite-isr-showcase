@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IsrCard from '../components/IsrCard.astro';
+
+export const prerender = false;
+---
+
+<Layout title="Appwrite ISR cache playground">
+  <div class="grid gap-5 md:grid-cols-2">
+    <IsrCard
+      title="Time-based"
+      badge="60s TTL"
+      endpoint="/v1/isr/cache-controled-date"
+      header="X-Appwrite-Cache-Control: public, max-age=60"
+    />
+
+    <IsrCard
+      title="Key-based"
+      badge="Cache tags"
+      endpoint="/v1/isr/keyed-date"
+      header="X-Appwrite-Cache-Control: public, max-age=31536000 + X-Appwrite-Keys: key123 key456"
+    >
+      <Fragment slot="actions">
+        <button
+          class="btn"
+          data-variant="outline"
+          data-size="sm"
+          type="button"
+          data-invalidate="tag"
+          data-reference="key123"
+        >
+          Purge key123
+        </button>
+        <button
+          class="btn"
+          data-variant="outline"
+          data-size="sm"
+          type="button"
+          data-invalidate="tag"
+          data-reference="key456"
+        >
+          Purge key456
+        </button>
+      </Fragment>
+    </IsrCard>
+
+    <IsrCard
+      title="Path-based"
+      badge="1 year TTL"
+      endpoint="/v1/isr/pathed-date"
+      header="X-Appwrite-Cache-Control: public, max-age=31536000"
+    >
+      <Fragment slot="actions">
+        <button
+          class="btn"
+          data-variant="outline"
+          data-size="sm"
+          type="button"
+          data-invalidate="path"
+          data-reference="/v1/isr/pathed-date"
+        >
+          Purge path
+        </button>
+      </Fragment>
+    </IsrCard>
+
+    <IsrCard
+      title="Wildcard"
+      badge="24h TTL"
+      endpoint="/v1/isr/wildcarded-date"
+      header="X-Appwrite-Cache-Control: public, max-age=86400"
+    >
+      <Fragment slot="actions">
+        <button
+          class="btn"
+          data-variant="destructive"
+          data-size="sm"
+          type="button"
+          data-invalidate="all"
+        >
+          Purge everything
+        </button>
+      </Fragment>
+    </IsrCard>
+  </div>
+</Layout>

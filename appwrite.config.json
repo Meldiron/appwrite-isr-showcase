@@ -1,0 +1,31 @@
+{
+    "organizationId": "almostApps",
+    "projectId": "isr-demo",
+    "projectName": "ISR demo",
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "sites": [
+        {
+            "$id": "isr-site",
+            "name": "ISR Site",
+            "framework": "astro",
+            "adapter": "ssr",
+            "buildRuntime": "node-22",
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./dist",
+            "fallbackFile": "",
+            "buildSpecification": "s-4vcpu-4gb",
+            "runtimeSpecification": "s-4vcpu-4gb",
+            "deploymentRetention": 7,
+            "timeout": 30,
+            "logging": true,
+            "path": "./",
+            "installationId": "",
+            "providerRepositoryId": "",
+            "providerBranch": "",
+            "providerSilentMode": false,
+            "providerRootDirectory": "",
+            "startCommand": ""
+        }
+    ]
+}

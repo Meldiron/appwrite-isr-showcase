@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      // Applied before paint so the theme never flashes.
+      const stored = localStorage.getItem('theme');
+      const dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    </script>
+  </head>
+  <body class="min-h-dvh">
+    <header class="border-b">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
+          ISR Playground
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-6 py-10">
+      <slot />
+    </main>
+
+    <div id="toaster" class="toaster"></div>
+
+    <script>
+      import 'basecoat-css/basecoat';
+      import 'basecoat-css/toast';
+    </script>
+  </body>
+</html>
