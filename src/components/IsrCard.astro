@@ -81,7 +81,7 @@ const { title, badge, endpoint, header } = Astro.props;
     if (!response.ok || !body.success) throw new Error(body.message ?? `HTTP ${response.status}`);
 
     // Only a type=all purge comes through without a reference.
-    toast(`Purged ${reference ?? 'everything'} — fetch again to see it`, 'success');
+    toast(`Purged ${reference ?? 'everything'}`, 'success');
   }
 
   document.addEventListener('click', async (event) => {
