@@ -8,10 +8,10 @@ strategies, styled with [Basecoat UI](https://basecoatui.com) on Tailwind v4.
 | Route                            | Caching headers                                    | How it refreshes                    |
 | :------------------------------- | :------------------------------------------------- | :---------------------------------- |
 | `/`                              | none                                               | dashboard with three fetch cards    |
-| `/v1/isr/cache-controled-date`   | `X-Appwrite-Cache-Control: public, max-age=60`     | 60s TTL expiry                      |
-| `/v1/isr/keyed-date`             | `X-Appwrite-Keys: key123 key456`                   | tag invalidation only (no TTL)      |
-| `/v1/isr/pathed-date`            | `X-Appwrite-Cache-Control: public, max-age=31536000` | path invalidation (1 year TTL)    |
-| `/v1/isr/wildcarded-date`        | `X-Appwrite-Cache-Control: public, max-age=86400`  | domain-wide purge (24h TTL)         |
+| `/v1/isr/cache-controled-date`   | `CDN-Cache-Control: public, max-age=60`     | 60s TTL expiry                      |
+| `/v1/isr/keyed-date`             | `CDN-Cache-Key: key123 key456`                   | tag invalidation only (no TTL)      |
+| `/v1/isr/pathed-date`            | `CDN-Cache-Control: public, max-age=31536000` | path invalidation (1 year TTL)    |
+| `/v1/isr/wildcarded-date`        | `CDN-Cache-Control: public, max-age=86400`  | domain-wide purge (24h TTL)         |
 | `/v1/isr/invalidate`             | `Cache-Control: no-store`                          | `POST` — calls `Proxy.createInvalidation()` |
 
 Each date endpoint returns `{ endpoint, strategy, generatedAt, generatedAtEpochMs }`. The
@@ -40,7 +40,7 @@ report the missing configuration in the card.
 
 ## Caching caveat
 
-`X-Appwrite-Cache-Control` and `X-Appwrite-Keys` are consumed by Appwrite's edge and never
+`CDN-Cache-Control` and `CDN-Cache-Key` are consumed by Appwrite's edge and never
 reach the browser, so locally every fetch is freshly rendered and the age resets to zero.
 Deploy behind Appwrite to see the cache age actually grow.
 

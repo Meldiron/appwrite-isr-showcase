@@ -14,7 +14,7 @@ export const GET: APIRoute = () => {
   return new Response(
     JSON.stringify({
       endpoint: '/v1/isr/pathed-date',
-      strategy: 'X-Appwrite-Cache-Control: public, max-age=31536000',
+      strategy: 'CDN-Cache-Control: public, max-age=31536000',
       generatedAt: now.toISOString(),
       generatedAtEpochMs: now.getTime(),
     }),
@@ -22,7 +22,7 @@ export const GET: APIRoute = () => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'X-Appwrite-Cache-Control': 'public, max-age=31536000',
+        'CDN-Cache-Control': 'public, max-age=31536000',
       },
     },
   );
