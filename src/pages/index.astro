@@ -11,14 +11,31 @@ export const prerender = false;
       title="Time-based"
       badge="60s TTL"
       endpoint="/v1/isr/cache-controled-date"
-      header="X-Appwrite-Cache-Control: public, max-age=60"
     />
-
+    
+    <IsrCard
+      title="Path-based"
+      badge="1 year TTL"
+      endpoint="/v1/isr/pathed-date"
+    >
+      <Fragment slot="actions">
+        <button
+          class="btn"
+          data-variant="outline"
+          data-size="sm"
+          type="button"
+          data-invalidate="path"
+          data-reference="/v1/isr/pathed-date"
+        >
+          Purge path
+        </button>
+      </Fragment>
+    </IsrCard>
+    
     <IsrCard
       title="Key-based"
-      badge="Cache tags"
+      badge="Cache tags + 1 year TTL"
       endpoint="/v1/isr/keyed-date"
-      header="X-Appwrite-Cache-Control: public, max-age=31536000 + X-Appwrite-Keys: key123 key456"
     >
       <Fragment slot="actions">
         <button
@@ -45,30 +62,9 @@ export const prerender = false;
     </IsrCard>
 
     <IsrCard
-      title="Path-based"
-      badge="1 year TTL"
-      endpoint="/v1/isr/pathed-date"
-      header="X-Appwrite-Cache-Control: public, max-age=31536000"
-    >
-      <Fragment slot="actions">
-        <button
-          class="btn"
-          data-variant="outline"
-          data-size="sm"
-          type="button"
-          data-invalidate="path"
-          data-reference="/v1/isr/pathed-date"
-        >
-          Purge path
-        </button>
-      </Fragment>
-    </IsrCard>
-
-    <IsrCard
       title="Wildcard"
       badge="24h TTL"
       endpoint="/v1/isr/wildcarded-date"
-      header="X-Appwrite-Cache-Control: public, max-age=86400"
     >
       <Fragment slot="actions">
         <button
