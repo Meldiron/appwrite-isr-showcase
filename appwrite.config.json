@@ -15,14 +15,14 @@
             ],
             "events": [],
             "scopes": [
-                "rules.write"
+                "proxy.invalidations.write"
             ],
             "schedule": "",
             "timeout": 15,
             "enabled": true,
             "logging": true,
             "entrypoint": "src/main.js",
-            "commands": "npm install",
+            "commands": "npm install --allow-remote=all",
             "ignore": [
                 "node_modules",
                 ".npm"

@@ -104,7 +104,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // The dynamic API key inherits the function's scopes; purging requires
-    // the `rules.write` scope (see appwrite.config.json).
+    // the `proxy.invalidations.write` scope (see appwrite.config.json).
     const client = new Client()
       .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
       .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
