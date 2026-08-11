@@ -3,6 +3,34 @@
     "projectId": "isr-demo",
     "projectName": "ISR demo",
     "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "functions": [
+        {
+            "$id": "api",
+            "name": "api",
+            "runtime": "node-26",
+            "buildSpecification": "s-2vcpu-2gb",
+            "runtimeSpecification": "s-1vcpu-1gb",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [
+                "rules.write"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "deploymentRetention": 0,
+            "path": "functions/api"
+        }
+    ],
     "sites": [
         {
             "$id": "isr-site",
